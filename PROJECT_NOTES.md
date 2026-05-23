@@ -307,11 +307,52 @@ git push
 
 ## Next Planned Milestones
 
-1. Verify Docker Compose with Spring Boot and PostgreSQL.
-2. Commit/push Docker milestone.
-3. Add Vue.js frontend.
-4. Connect Vue frontend to backend APIs.
-5. Add GitHub Actions CI.
-6. Add Kubernetes manifests.
-7. Deploy to AWS or Azure.
-8. Add Datadog monitoring.
+1. Commit/push Vue frontend milestone.
+2. Add frontend Dockerfile and include frontend in Docker Compose.
+3. Add GitHub Actions CI.
+4. Add Kubernetes manifests.
+5. Deploy to AWS or Azure.
+6. Add Datadog monitoring.
+
+## Vue Frontend Milestone
+
+Added a Vue 3 frontend generated with Vite.
+
+Frontend stack:
+
+- Vue 3
+- Vite
+- Axios
+
+Added:
+
+- Dashboard summary cards
+- Department creation form
+- Employee creation form
+- Employee table
+- Recent hires list
+- `src/api.js` API service layer
+- `VITE_API_BASE_URL` environment variable support
+
+Backend change:
+
+- Added CORS configuration allowing `http://localhost:5173`.
+
+Verified:
+
+```powershell
+cd frontend
+npm run build
+```
+
+Also verified backend CORS:
+
+```text
+Access-Control-Allow-Origin: http://localhost:5173
+```
+
+Development URL:
+
+```text
+http://127.0.0.1:5173
+```

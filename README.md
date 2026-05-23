@@ -139,3 +139,38 @@ Check running containers:
 ```powershell
 docker ps
 ```
+
+## Frontend
+
+The frontend is a Vue 3 app generated with Vite.
+
+It calls the Spring Boot API through Axios. By default, it expects the backend at:
+
+```text
+http://localhost:8080
+```
+
+Install dependencies:
+
+```powershell
+cd frontend
+npm install
+```
+
+Run the frontend dev server:
+
+```powershell
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+Build the frontend:
+
+```powershell
+npm run build
+```
