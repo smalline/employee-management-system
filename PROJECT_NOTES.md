@@ -585,3 +585,45 @@ Cost reminder:
 ```powershell
 az group delete --name ems-rg --yes
 ```
+
+## Datadog Milestone
+
+Goal:
+
+```text
+Add observability for the Kubernetes deployment.
+```
+
+Datadog concepts:
+
+- Metrics show numeric system and app health over time.
+- Logs show events and errors emitted by containers.
+- Traces show request flow across services.
+- Dashboards visualize important signals.
+- Alerts notify when something breaks or crosses a threshold.
+
+Added:
+
+```text
+k8s/datadog/datadog-agent.yaml
+```
+
+The Datadog Agent manifest enables:
+
+- APM
+- log collection
+- live process collection
+- live container collection
+- tags for `env`, `app`, and `cloud`
+
+Important security note:
+
+```text
+The Datadog API key is not committed to Git. It must be created as a Kubernetes Secret named datadog-secret in the datadog namespace.
+```
+
+Interview wording:
+
+```text
+I added Datadog observability to the Kubernetes deployment using the Datadog Operator. The Operator manages Datadog Agent pods in the cluster, and the Agent collects container metrics, logs, process data, and APM data. I stored the Datadog API key in a Kubernetes Secret instead of committing it to source control.
+```

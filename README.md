@@ -369,3 +369,62 @@ Clean up Azure resources when finished to avoid cloud charges:
 ```powershell
 az group delete --name ems-rg --yes
 ```
+
+## Datadog
+
+Datadog is used for observability: metrics, logs, traces, dashboards, alerts, and container visibility.
+
+This project uses the Datadog Operator for Kubernetes. The Operator manages the Datadog Agent pods inside the cluster.
+
+Install Helm if needed:
+
+```powershell
+winget install --id Helm.Helm --exact --source winget
+```
+
+Add the Datadog Helm repository:
+
+```powershell
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
+```
+
+Create the Datadog namespace:
+
+```powershell
+kubectl create namespace datadog
+```
+
+Create the Datadog API key secret. Do not commit this key to Git:
+
+```powershell
+kubectl create secret generic datadog-secret `
+  --from-literal api-key=<DATADOG_API_KEY> `
+  -n datadog
+```
+
+Install the Datadog Operator:
+
+```powershell
+helm install datadog-operator datadog/datadog-operator -n datadog
+```
+
+Deploy the Datadog Agent configuration:
+
+```powershell
+kubectl apply -f k8s/datadog/datadog-agent.yaml
+```
+
+Check Datadog pods:
+
+```powershell
+kubectl get pods -n datadog
+```
+
+Clean up Datadog from the cluster:
+
+```powershell
+kubectl delete -f k8s/datadog/datadog-agent.yaml
+helm uninstall datadog-operator -n datadog
+kubectl delete namespace datadog
+```
