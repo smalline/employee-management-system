@@ -202,6 +202,30 @@ Workflow file:
 .github/workflows/ci.yml
 ```
 
+## Container Registry
+
+GitHub Actions also builds and publishes Docker images to GitHub Container Registry on every push to `main`.
+
+Workflow file:
+
+```text
+.github/workflows/docker-images.yml
+```
+
+Published image names:
+
+```text
+ghcr.io/smalline/employee-management-system-backend
+ghcr.io/smalline/employee-management-system-frontend
+```
+
+Each image gets two tags:
+
+- `latest`
+- the Git commit SHA
+
+The commit SHA tag is useful for deployments because it points to one exact version of the application.
+
 ## Kubernetes
 
 Kubernetes is used to run the same app as Docker Compose, but with deployment-style infrastructure.

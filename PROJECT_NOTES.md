@@ -487,3 +487,31 @@ On this local Docker Desktop Kubernetes setup, direct NodePort access was not re
 ```powershell
 kubectl port-forward service/frontend 30080:80 -n employee-management
 ```
+
+## Container Registry Milestone
+
+Added:
+
+```text
+.github/workflows/docker-images.yml
+```
+
+Purpose:
+
+- Build backend Docker image in GitHub Actions
+- Build frontend Docker image in GitHub Actions
+- Push both images to GitHub Container Registry
+- Tag images with both `latest` and the Git commit SHA
+
+Published image names:
+
+```text
+ghcr.io/smalline/employee-management-system-backend
+ghcr.io/smalline/employee-management-system-frontend
+```
+
+Interview wording:
+
+```text
+I added a GitHub Actions workflow that builds and publishes Docker images to GitHub Container Registry. This is important because Kubernetes clusters in cloud environments cannot use images that only exist on my laptop. Publishing images to a registry gives the cluster a stable place to pull versioned application images from.
+```
