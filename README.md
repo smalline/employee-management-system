@@ -98,3 +98,44 @@ List employees:
 ```powershell
 Invoke-RestMethod http://localhost:8080/api/employees
 ```
+
+## Docker
+
+Docker is used to run the backend and PostgreSQL in containers.
+
+In this setup:
+
+- `postgres` runs a PostgreSQL database container
+- `backend` builds and runs the Spring Boot API container
+- Docker Compose creates a shared network so the backend can reach PostgreSQL by service name: `postgres`
+- The backend uses the `docker` Spring profile when running in Docker Compose
+
+Start the Docker environment:
+
+```powershell
+docker compose up --build
+```
+
+Run it in the background:
+
+```powershell
+docker compose up --build -d
+```
+
+Stop the containers:
+
+```powershell
+docker compose down
+```
+
+Stop containers and delete the PostgreSQL volume:
+
+```powershell
+docker compose down -v
+```
+
+Check running containers:
+
+```powershell
+docker ps
+```
