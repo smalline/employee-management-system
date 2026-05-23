@@ -326,7 +326,14 @@ az aks create `
   --resource-group ems-rg `
   --name ems-aks `
   --node-count 1 `
+  --node-vm-size Standard_DC2s_v3 `
   --generate-ssh-keys
+```
+
+If Azure says the subscription is not registered for AKS, register the provider:
+
+```powershell
+az provider register --namespace Microsoft.ContainerService --wait
 ```
 
 Connect `kubectl` to AKS:
@@ -350,6 +357,12 @@ kubectl get service frontend -n employee-management
 ```
 
 The frontend service uses `LoadBalancer` in AKS, so Azure will create a public external IP address.
+
+Test the app with the external IP:
+
+```powershell
+Invoke-RestMethod http://<external-ip>/api/status
+```
 
 Clean up Azure resources when finished to avoid cloud charges:
 

@@ -527,7 +527,8 @@ Use Azure AKS for the cloud Kubernetes milestone.
 Current local status:
 
 ```text
-Azure CLI is not installed yet. The `az` command was not recognized.
+Azure CLI was installed with winget.
+Azure login and subscription access were verified.
 ```
 
 Added:
@@ -547,4 +548,40 @@ Interview wording:
 
 ```text
 For cloud deployment, I prepared an AKS-specific Kubernetes manifest. The local manifests use locally built Docker images and NodePort, while the AKS manifest uses GitHub Container Registry images and exposes the frontend through an Azure LoadBalancer.
+```
+
+Azure deployment results:
+
+```text
+Resource group: ems-rg
+AKS cluster: ems-aks
+Location: eastus
+Node count: 1
+Node VM size: Standard_DC2s_v3
+Kubernetes context: ems-aks
+Frontend external IP: 20.253.85.243
+```
+
+Issues handled:
+
+- The subscription was missing the AKS resource provider.
+- Fixed by registering `Microsoft.ContainerService`.
+- `Standard_B2s` was not allowed for this subscription in `eastus`.
+- Used `Standard_DC2s_v3`, which Azure reported as allowed.
+
+Verified:
+
+```text
+backend pod: Running
+frontend pod: Running
+postgres pod: Running
+PostgreSQL PVC: Bound
+GET http://20.253.85.243: 200 OK
+GET http://20.253.85.243/api/status: UP
+```
+
+Cost reminder:
+
+```powershell
+az group delete --name ems-rg --yes
 ```
