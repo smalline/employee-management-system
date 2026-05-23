@@ -515,3 +515,36 @@ Interview wording:
 ```text
 I added a GitHub Actions workflow that builds and publishes Docker images to GitHub Container Registry. This is important because Kubernetes clusters in cloud environments cannot use images that only exist on my laptop. Publishing images to a registry gives the cluster a stable place to pull versioned application images from.
 ```
+
+## Azure AKS Milestone
+
+Decision:
+
+```text
+Use Azure AKS for the cloud Kubernetes milestone.
+```
+
+Current local status:
+
+```text
+Azure CLI is not installed yet. The `az` command was not recognized.
+```
+
+Added:
+
+```text
+k8s/aks/aks-deployment.yaml
+```
+
+Purpose:
+
+- Provide an AKS-ready Kubernetes manifest.
+- Use GHCR image names instead of local Docker image names.
+- Set backend and frontend image pull policy to `Always`.
+- Change the frontend Service from `NodePort` to `LoadBalancer` for Azure.
+
+Interview wording:
+
+```text
+For cloud deployment, I prepared an AKS-specific Kubernetes manifest. The local manifests use locally built Docker images and NodePort, while the AKS manifest uses GitHub Container Registry images and exposes the frontend through an Azure LoadBalancer.
+```

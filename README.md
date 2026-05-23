@@ -295,3 +295,64 @@ Delete the local Kubernetes environment:
 ```powershell
 kubectl delete namespace employee-management
 ```
+
+## Azure AKS
+
+Azure Kubernetes Service, or AKS, is Azure's managed Kubernetes service.
+
+For local Kubernetes, the cluster can use images built on your laptop. For AKS, the cluster must pull images from a container registry. This project uses GitHub Container Registry:
+
+```text
+ghcr.io/smalline/employee-management-system-backend
+ghcr.io/smalline/employee-management-system-frontend
+```
+
+Install the Azure CLI, then sign in:
+
+```powershell
+az login
+```
+
+Create an Azure resource group:
+
+```powershell
+az group create --name ems-rg --location eastus
+```
+
+Create an AKS cluster:
+
+```powershell
+az aks create `
+  --resource-group ems-rg `
+  --name ems-aks `
+  --node-count 1 `
+  --generate-ssh-keys
+```
+
+Connect `kubectl` to AKS:
+
+```powershell
+az aks get-credentials --resource-group ems-rg --name ems-aks
+kubectl config current-context
+```
+
+Deploy the AKS manifest:
+
+```powershell
+kubectl apply -f k8s/aks/aks-deployment.yaml
+```
+
+Check the app:
+
+```powershell
+kubectl get pods -n employee-management
+kubectl get service frontend -n employee-management
+```
+
+The frontend service uses `LoadBalancer` in AKS, so Azure will create a public external IP address.
+
+Clean up Azure resources when finished to avoid cloud charges:
+
+```powershell
+az group delete --name ems-rg --yes
+```
