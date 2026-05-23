@@ -627,3 +627,288 @@ Interview wording:
 ```text
 I added Datadog observability to the Kubernetes deployment using the Datadog Operator. The Operator manages Datadog Agent pods in the cluster, and the Agent collects container metrics, logs, process data, and APM data. I stored the Datadog API key in a Kubernetes Secret instead of committing it to source control.
 ```
+
+## Session Wrap-Up
+
+Date:
+
+```text
+2026-05-23
+```
+
+### TLDR
+
+Built a first full pass of the original learning stack:
+
+```text
+Vue frontend
+Spring Boot backend
+PostgreSQL database
+Docker
+Docker Compose
+GitHub
+GitHub Actions
+GitHub Container Registry
+Kubernetes
+Azure AKS
+Datadog preparation
+```
+
+End-to-end story:
+
+```text
+Built app -> containerized app -> ran locally with Docker Compose -> pushed to GitHub -> added CI -> published Docker images -> deployed to local Kubernetes -> deployed to Azure AKS -> prepared Datadog monitoring
+```
+
+### Repository
+
+```text
+https://github.com/smalline/employee-management-system
+```
+
+### Main Project Structure
+
+```text
+backend/                 Spring Boot API
+frontend/                Vue app
+docker-compose.yml       Local multi-container environment
+k8s/                     Local Kubernetes manifests
+k8s/aks/                 Azure AKS manifest
+k8s/datadog/             Datadog Agent configuration
+.github/workflows/       GitHub Actions workflows
+PROJECT_NOTES.md         Learning notes and interview explanations
+README.md                Project setup and command reference
+```
+
+### Completed Milestones
+
+1. Created GitHub repository.
+2. Built Spring Boot backend starter.
+3. Added employee and department CRUD APIs.
+4. Added PostgreSQL support.
+5. Dockerized backend and database.
+6. Built Vue frontend.
+7. Containerized frontend with Nginx.
+8. Ran full stack with Docker Compose.
+9. Added GitHub Actions CI.
+10. Published backend and frontend Docker images to GHCR.
+11. Deployed app to local Kubernetes.
+12. Deployed app to Azure AKS and verified public access.
+13. Prepared Datadog Kubernetes observability configuration.
+
+### Important URLs
+
+Local Docker frontend:
+
+```text
+http://localhost:5173
+```
+
+Local Kubernetes frontend with port-forward:
+
+```text
+http://localhost:30080
+```
+
+Azure AKS frontend that was verified:
+
+```text
+http://20.253.85.243
+```
+
+Note:
+
+```text
+The Azure resource group was deleted or deletion was in progress to avoid ongoing cost.
+```
+
+### Key Commands To Remember
+
+Git:
+
+```powershell
+git status
+git log --oneline
+git show --stat <commit>
+git add .
+git commit -m "message"
+git push
+```
+
+Docker:
+
+```powershell
+docker compose up --build -d
+docker compose ps
+docker compose down
+docker compose down -v
+```
+
+Kubernetes:
+
+```powershell
+kubectl config current-context
+kubectl get pods -n employee-management
+kubectl get services -n employee-management
+kubectl apply -f k8s
+kubectl port-forward service/frontend 30080:80 -n employee-management
+```
+
+Azure:
+
+```powershell
+az login
+az account show --output table
+az group create --name ems-rg --location eastus
+az provider register --namespace Microsoft.ContainerService --wait
+az aks create --resource-group ems-rg --name ems-aks --location eastus --node-count 1 --node-vm-size Standard_DC2s_v3 --generate-ssh-keys
+az aks get-credentials --resource-group ems-rg --name ems-aks --overwrite-existing
+az group delete --name ems-rg --yes
+```
+
+Datadog:
+
+```powershell
+kubectl create namespace datadog
+kubectl create secret generic datadog-secret --from-literal api-key=<DATADOG_API_KEY> -n datadog
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
+helm install datadog-operator datadog/datadog-operator -n datadog
+kubectl apply -f k8s/datadog/datadog-agent.yaml
+```
+
+### Interview Pitch
+
+```text
+I built a full-stack Employee Management System with Vue, Spring Boot, and PostgreSQL. I containerized the frontend and backend with Docker, ran the stack locally with Docker Compose, added CI with GitHub Actions, published Docker images to GitHub Container Registry, deployed the app to local Kubernetes, then deployed it to Azure AKS. I also prepared Datadog observability using the Datadog Operator.
+```
+
+### Concepts To Explain
+
+Docker:
+
+```text
+Docker packages an application and its runtime dependencies into an image. A container is a running instance of that image.
+```
+
+Docker Compose:
+
+```text
+Docker Compose runs multiple containers together locally, such as frontend, backend, and database.
+```
+
+Kubernetes:
+
+```text
+Kubernetes is a container orchestration platform. It manages desired state, restarts, networking, secrets, storage, and scaling.
+```
+
+Kubernetes cluster:
+
+```text
+A cluster is the environment where Kubernetes runs workloads. It contains one or more nodes. Docker Desktop provided a local single-node cluster, and Azure AKS provided a cloud cluster.
+```
+
+Deployment:
+
+```text
+A Deployment manages pods and keeps the desired number of replicas running.
+```
+
+Service:
+
+```text
+A Service gives pods a stable network name because pod IP addresses can change.
+```
+
+Secret:
+
+```text
+A Secret stores sensitive values like database passwords or API keys outside source code.
+```
+
+PersistentVolumeClaim:
+
+```text
+A PersistentVolumeClaim requests storage so data, such as PostgreSQL data, can survive pod restarts.
+```
+
+GitHub Actions:
+
+```text
+GitHub Actions runs automated checks like backend tests, frontend builds, and Docker validation on every push or pull request.
+```
+
+GitHub Container Registry:
+
+```text
+GHCR stores Docker images so Kubernetes clusters can pull deployable application versions from a registry instead of relying on images built only on a laptop.
+```
+
+Azure AKS:
+
+```text
+AKS is Azure's managed Kubernetes service. Azure manages the Kubernetes control plane while the application owner manages workloads, manifests, services, and configuration.
+```
+
+Datadog:
+
+```text
+Datadog provides observability through metrics, logs, traces, dashboards, alerts, and container visibility.
+```
+
+### Bugs And Lessons Learned
+
+Spring Boot lazy loading issue:
+
+```text
+Employee listing had related department data loading issues. Fixed with @EntityGraph(attributePaths = "department") in EmployeeRepository.
+```
+
+GitHub Actions Maven wrapper issue:
+
+```text
+Linux CI could not execute ./mvnw directly due permission behavior. Fixed by running bash ./mvnw test.
+```
+
+Kubernetes backend startup issue:
+
+```text
+Backend initially started before Postgres was accepting connections. Fixed with a backend init container that waits for postgres:5432.
+```
+
+Azure provider issue:
+
+```text
+New subscription was not registered for Microsoft.ContainerService. Fixed with az provider register --namespace Microsoft.ContainerService --wait.
+```
+
+Azure VM SKU issue:
+
+```text
+Standard_B2s was not allowed in eastus for this subscription. Used Standard_DC2s_v3, which Azure reported as allowed.
+```
+
+Azure cost lesson:
+
+```text
+AKS can create billable resources such as VM nodes, disks, public IPs, and load balancers. Delete the resource group after testing.
+```
+
+### Next Time Continue Here
+
+Good next options:
+
+1. Recreate AKS for a short session and install Datadog live.
+2. Add Spring Boot application-level metrics and traces.
+3. Add authentication to the Employee Management System.
+4. Add production database option using Azure Database for PostgreSQL.
+5. Add Kubernetes Ingress and HTTPS.
+6. Replace `latest` image deployment with commit SHA tags.
+7. Add GitHub Actions deployment workflow for AKS.
+
+Suggested next step:
+
+```text
+Recreate AKS only when ready, install Datadog live, verify metrics/logs in the Datadog dashboard, then delete the Azure resource group again.
+```
