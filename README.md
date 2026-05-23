@@ -74,3 +74,27 @@ Verify the API:
 ```powershell
 Invoke-RestMethod http://localhost:8080/api/status
 ```
+
+Create a department:
+
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri http://localhost:8080/api/departments `
+  -ContentType "application/json" `
+  -Body '{"name":"Engineering","description":"Builds and maintains software systems"}'
+```
+
+Create an employee:
+
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri http://localhost:8080/api/employees `
+  -ContentType "application/json" `
+  -Body '{"firstName":"Ava","lastName":"Patel","email":"ava.patel@example.com","jobTitle":"Software Engineer","hireDate":"2026-05-23","departmentId":1}'
+```
+
+List employees:
+
+```powershell
+Invoke-RestMethod http://localhost:8080/api/employees
+```
