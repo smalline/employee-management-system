@@ -107,7 +107,9 @@ In this setup:
 
 - `postgres` runs a PostgreSQL database container
 - `backend` builds and runs the Spring Boot API container
+- `frontend` builds the Vue app and serves it with Nginx
 - Docker Compose creates a shared network so the backend can reach PostgreSQL by service name: `postgres`
+- Nginx proxies frontend `/api` requests to the backend service
 - The backend uses the `docker` Spring profile when running in Docker Compose
 
 Start the Docker environment:
@@ -140,6 +142,12 @@ Check running containers:
 docker ps
 ```
 
+Open the Dockerized frontend:
+
+```text
+http://localhost:5173
+```
+
 ## Frontend
 
 The frontend is a Vue 3 app generated with Vite.
@@ -147,8 +155,11 @@ The frontend is a Vue 3 app generated with Vite.
 It calls the Spring Boot API through Axios. By default, it expects the backend at:
 
 ```text
-http://localhost:8080
+/api
 ```
+
+During local development, Vite proxies `/api` requests to `http://localhost:8080`.
+In Docker, Nginx proxies `/api` requests to the backend container.
 
 Install dependencies:
 

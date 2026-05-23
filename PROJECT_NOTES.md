@@ -307,12 +307,11 @@ git push
 
 ## Next Planned Milestones
 
-1. Commit/push Vue frontend milestone.
-2. Add frontend Dockerfile and include frontend in Docker Compose.
-3. Add GitHub Actions CI.
-4. Add Kubernetes manifests.
-5. Deploy to AWS or Azure.
-6. Add Datadog monitoring.
+1. Commit/push full-stack Docker frontend milestone.
+2. Add GitHub Actions CI.
+3. Add Kubernetes manifests.
+4. Deploy to AWS or Azure.
+5. Add Datadog monitoring.
 
 ## Vue Frontend Milestone
 
@@ -355,4 +354,38 @@ Development URL:
 
 ```text
 http://127.0.0.1:5173
+```
+
+## Full-Stack Docker Frontend Milestone
+
+Added:
+
+- `frontend/Dockerfile`
+- `frontend/nginx.conf`
+- `frontend/.dockerignore`
+- `frontend` service in `docker-compose.yml`
+- Vite dev proxy for `/api` and `/actuator`
+
+Containerized frontend behavior:
+
+- Node builds the Vue app.
+- Nginx serves the production static assets.
+- Nginx proxies `/api` requests to `http://backend:8080`.
+
+Verified:
+
+```powershell
+docker compose up --build -d
+docker compose ps
+Invoke-WebRequest http://localhost:5173
+Invoke-RestMethod http://localhost:5173/api/status
+Invoke-RestMethod http://localhost:5173/api/employees
+```
+
+Result:
+
+```text
+ems-frontend: running on localhost:5173
+ems-backend: running on localhost:8080
+ems-postgres: healthy on localhost:5432
 ```
