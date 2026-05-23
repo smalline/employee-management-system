@@ -201,3 +201,73 @@ Workflow file:
 ```text
 .github/workflows/ci.yml
 ```
+
+## Kubernetes
+
+Kubernetes is used to run the same app as Docker Compose, but with deployment-style infrastructure.
+
+In this setup:
+
+- `Namespace` keeps this project's Kubernetes resources grouped together
+- `Secret` stores PostgreSQL username, password, and database name
+- `PersistentVolumeClaim` requests storage for PostgreSQL data
+- `Deployment` runs containers and restarts them if they fail
+- `Service` gives containers stable network names inside the cluster
+- `NodePort` exposes the frontend at `http://localhost:30080`
+
+Before running Kubernetes locally, enable it in Docker Desktop:
+
+```text
+Docker Desktop -> Settings -> Kubernetes -> Enable Kubernetes -> Apply & restart
+```
+
+Check that Kubernetes is available:
+
+```powershell
+kubectl config get-contexts
+kubectl config use-context docker-desktop
+kubectl cluster-info
+```
+
+Build the local Docker images:
+
+```powershell
+docker compose build backend frontend
+```
+
+Apply the Kubernetes manifests:
+
+```powershell
+kubectl apply -f k8s
+```
+
+Check the deployment:
+
+```powershell
+kubectl get pods -n employee-management
+kubectl get services -n employee-management
+```
+
+Open the app:
+
+```text
+http://localhost:30080
+```
+
+If `localhost:30080` is not reachable directly, forward the Kubernetes frontend service to your machine:
+
+```powershell
+kubectl port-forward service/frontend 30080:80 -n employee-management
+```
+
+Test the API through the Kubernetes frontend service:
+
+```powershell
+Invoke-RestMethod http://localhost:30080/api/status
+```
+
+Delete the local Kubernetes environment:
+
+```powershell
+kubectl delete namespace employee-management
+```

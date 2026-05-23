@@ -410,3 +410,80 @@ Interview wording:
 ```text
 I added a GitHub Actions CI pipeline that validates backend tests, frontend builds, and Docker Compose configuration on every push and pull request. This gives fast feedback before changes are merged and proves the project works in a clean environment, not just on my machine.
 ```
+
+## Kubernetes Milestone
+
+Added Kubernetes manifests under:
+
+```text
+k8s/
+```
+
+Resources added:
+
+- `Namespace` named `employee-management`
+- PostgreSQL `Secret`
+- PostgreSQL `PersistentVolumeClaim`
+- PostgreSQL `Deployment`
+- PostgreSQL `Service`
+- Backend `ConfigMap`
+- Backend `Deployment`
+- Backend `Service`
+- Frontend `Deployment`
+- Frontend `Service` exposed with NodePort `30080`
+
+Important learning notes:
+
+- A `Deployment` describes how Kubernetes should run and restart application containers.
+- A `Service` gives pods a stable network name because pod IP addresses can change.
+- A `Secret` stores sensitive config separately from application code.
+- A `PersistentVolumeClaim` requests disk storage so database data can survive pod restarts.
+- The backend uses an init container to wait until PostgreSQL is reachable before Spring Boot starts.
+- The frontend can call `/api` because Nginx proxies API traffic to the backend service name inside Kubernetes.
+
+Interview wording:
+
+```text
+I created Kubernetes manifests for the full stack: PostgreSQL, Spring Boot, and Vue/Nginx. I used Deployments for running containers, Services for stable networking, a Secret for database credentials, and a PersistentVolumeClaim for database storage. The frontend is exposed locally with a NodePort, while backend and database services remain internal to the cluster.
+```
+
+Local Kubernetes was not enabled yet when these files were created.
+
+Enable it in Docker Desktop:
+
+```text
+Docker Desktop -> Settings -> Kubernetes -> Enable Kubernetes -> Apply & restart
+```
+
+Then verify:
+
+```powershell
+kubectl config get-contexts
+kubectl config use-context docker-desktop
+kubectl cluster-info
+```
+
+Deploy:
+
+```powershell
+docker compose build backend frontend
+kubectl apply -f k8s
+kubectl get pods -n employee-management
+kubectl get services -n employee-management
+```
+
+Verified local deployment:
+
+```text
+backend: Running
+frontend: Running
+postgres: Running
+frontend service: NodePort 30080
+GET http://localhost:30080/api/status: UP
+```
+
+On this local Docker Desktop Kubernetes setup, direct NodePort access was not reachable from Windows, so `kubectl port-forward` was used:
+
+```powershell
+kubectl port-forward service/frontend 30080:80 -n employee-management
+```
