@@ -35,3 +35,42 @@ employee-management-system/
 8. Deploy to local Kubernetes
 9. Deploy to AWS or Azure
 10. Add Datadog monitoring and dashboards
+
+## Backend
+
+The backend is a Spring Boot API generated with Spring Initializr.
+
+Current dependencies:
+
+- Spring Web MVC for REST APIs
+- Spring Data JPA for database persistence
+- Spring Security for authentication and authorization
+- Validation for request validation
+- Actuator for health and operational endpoints
+- PostgreSQL driver for the planned production database
+- H2 for early local development and tests
+
+Run tests:
+
+```powershell
+cd backend
+.\mvnw.cmd test
+```
+
+Build the executable JAR:
+
+```powershell
+.\mvnw.cmd package
+```
+
+Run the backend:
+
+```powershell
+java -jar target\backend-0.0.1-SNAPSHOT.jar
+```
+
+Verify the API:
+
+```powershell
+Invoke-RestMethod http://localhost:8080/api/status
+```
