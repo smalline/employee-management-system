@@ -185,3 +185,19 @@ Build the frontend:
 ```powershell
 npm run build
 ```
+
+## CI
+
+GitHub Actions runs checks on every push and pull request to `main`.
+
+The CI workflow verifies:
+
+- backend tests with Maven
+- frontend production build with Vite
+- Docker Compose configuration syntax
+
+Workflow file:
+
+```text
+.github/workflows/ci.yml
+```

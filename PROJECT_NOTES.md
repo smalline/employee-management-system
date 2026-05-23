@@ -307,11 +307,10 @@ git push
 
 ## Next Planned Milestones
 
-1. Commit/push full-stack Docker frontend milestone.
-2. Add GitHub Actions CI.
-3. Add Kubernetes manifests.
-4. Deploy to AWS or Azure.
-5. Add Datadog monitoring.
+1. Commit/push GitHub Actions CI milestone.
+2. Add Kubernetes manifests.
+3. Deploy to AWS or Azure.
+4. Add Datadog monitoring.
 
 ## Vue Frontend Milestone
 
@@ -388,4 +387,26 @@ Result:
 ems-frontend: running on localhost:5173
 ems-backend: running on localhost:8080
 ems-postgres: healthy on localhost:5432
+```
+
+## GitHub Actions CI Milestone
+
+Added:
+
+```text
+.github/workflows/ci.yml
+```
+
+The workflow runs on pushes and pull requests to `main`.
+
+Jobs:
+
+- Backend Tests: uses Java 21 and runs `./mvnw test`
+- Frontend Build: uses Node 24, runs `npm ci`, then `npm run build`
+- Docker Compose Config: runs `docker compose config --quiet`
+
+Interview wording:
+
+```text
+I added a GitHub Actions CI pipeline that validates backend tests, frontend builds, and Docker Compose configuration on every push and pull request. This gives fast feedback before changes are merged and proves the project works in a clean environment, not just on my machine.
 ```
